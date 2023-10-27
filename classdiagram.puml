@@ -4,28 +4,6 @@ class main {
     void main()
 }
 
-class CategoriesScreen{}
-class TabsScreen{}
-class MealsScreen{}
-class FiltersScreen{}
-class MealDetailsScreen{}
-
-class MealItem {
-    Key : key
-    Meal : meal
-    Function : onSelectMeal
-}
-class MealItemTrait {
-    Key key
-    IconData icon
-    String label
-}
-class MainDrawer{}
-class CategoryGridItem{}
-
-class Meal{}
-class Category{}
-
 main *-- TabsScreen
 
 TabsScreen *-- CategoriesScreen
@@ -33,6 +11,7 @@ TabsScreen *-- FiltersScreen
 TabsScreen *-- MealsScreen
 TabsScreen *-- MainDrawer
 TabsScreen *-- Meal
+TabsScreen *-- PersistFavorites
 
 CategoriesScreen *-- Meal
 CategoriesScreen *-- CategoryGridItem
