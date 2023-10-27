@@ -5,7 +5,9 @@ import 'package:meals_app/models/meal.dart';
 import 'package:meals_app/screens/categories.dart';
 import 'package:meals_app/screens/filters.dart';
 import 'package:meals_app/screens/meals.dart';
+import 'package:meals_app/utils/persist_favorites.dart';
 import 'package:meals_app/widgets/main_drawer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 const kInitialFilters = {
   Filter.glutenFree: false,
@@ -36,6 +38,9 @@ class _TabsScreenState extends State<TabsScreen> {
   int _selectedPageIndex = 0;
   final List<Meal> _favoriteMeals = [];
   Map<Filter, bool> _selectedFilters = kInitialFilters;
+  PersistFavorites persistFavorites = PersistFavorites();
+
+  bool _loadPresistence = true;
 
   // inform user of add/remove favorit
   void _showInfoMessage(String message) {
@@ -55,12 +60,14 @@ class _TabsScreenState extends State<TabsScreen> {
       setState(() {
         _favoriteMeals.remove(meal);
       });
+      persistFavorites.removeFavorites(meal.id);
       _showInfoMessage('Meal is no longer a favorite.');
     } else {
       setState(() {
         _favoriteMeals.add(meal);
-        _showInfoMessage('Marked as a favorite!');
       });
+      persistFavorites.addFavorites(meal.id);
+      _showInfoMessage('Marked as a favorite!');
     }
   }
 
@@ -93,7 +100,7 @@ class _TabsScreenState extends State<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //Todo: replace dummydata
+    //Load meal with filters
     final availableMeals = dummyMeals.where((meal) {
       if (_selectedFilters[Filter.glutenFree]! && !meal.isGlutenFree) {
         return false;
@@ -109,6 +116,14 @@ class _TabsScreenState extends State<TabsScreen> {
       }
       return true;
     }).toList();
+
+    //Load presistence favorites first time this build loads
+    if (_loadPresistence) {
+      _loadPresistence = false;
+
+      loadFavorites(availableMeals);
+      //.getFavorites() ?? [];
+    }
 
     Widget activePage = CategoriesScreen(
       onToggleFavorite: _toggleMealFavoriteStatus,
@@ -150,5 +165,17 @@ class _TabsScreenState extends State<TabsScreen> {
       body: activePage,
       bottomNavigationBar: navigationBarBottom,
     );
+  }
+
+  void loadFavorites(List<Meal> availableMeals) {
+    persistFavorites.getFavorites().then((listOfFavoritMealId) {
+      if (listOfFavoritMealId == null) return false;
+      List<Meal> loadFavoriteMeals = availableMeals.where((meal) {
+        return listOfFavoritMealId.contains(meal.id);
+      }).toList();
+
+      _favoriteMeals.addAll(loadFavoriteMeals);
+      return null;
+    });
   }
 }
