@@ -17,7 +17,7 @@ class MealDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Meal title
+    // App bar with meal title and favorite button
     var mealTitle = AppBar(title: Text(meal.title), actions: [
       IconButton(
         onPressed: () {

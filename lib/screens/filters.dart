@@ -7,6 +7,9 @@ enum Filter {
   vegan,
 }
 
+/**
+ * A screen that lets the user toggle filters on the meals displayed
+ */
 class FiltersScreen extends StatefulWidget {
   const FiltersScreen({super.key, required this.currentFilters});
 
@@ -41,13 +44,14 @@ class _FiltersScreenState extends State<FiltersScreen> {
       ),
       body: WillPopScope(
         onWillPop: () async {
+          //pass the selected filters back when navigating back
           Navigator.of(context).pop({
             Filter.glutenFree: _glutenFreeFilterSet,
             Filter.lactoseFree: _lactoseFreeFilterSet,
             Filter.vegetarian: _vegetarianFilterSet,
             Filter.vegan: _veganFilterSet,
           });
-          return false;
+          return false; //to not pop twise
         },
         child: Column(
           children: [

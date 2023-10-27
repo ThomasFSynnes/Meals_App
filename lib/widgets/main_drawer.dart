@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+/**
+ * A side drawer navigating the app displayed on the main screen.
+ */
 class MainDrawer extends StatelessWidget {
   const MainDrawer({super.key, required this.onSelectScreen});
 
@@ -42,7 +45,7 @@ class MainDrawer extends StatelessWidget {
               ],
             ),
           ),
-          ListTile(
+              ListTile(
             leading: Icon(
               Icons.restaurant,
               size: 26,
